@@ -49,7 +49,6 @@ func (this *Server)ListenMessage()  {
 func (this *Server)BordCast(user *User,msg string)  {
 	sendMsg:= "["+user.Addr+"]"+user.Name+":"+msg
 	this.Message<-sendMsg
-	
 }
 
 
@@ -58,12 +57,9 @@ func (this *Server)Handler(conn net.Conn)  {
 	fmt.Println("connect success!,new user online!!")
 
 	//用户上线了，将用户加入online map中
-	user := NewUser(conn)
-	this.mapLock.Lock()
-	this.OnlineMap[user.Name]=user
-	this.mapLock.Unlock()
-	//广播上线消息
-	this.BordCast(user,"online!!")
+	user := NewUser(conn,this)
+	user.Online()
+
 
 	//接收客户端发送的消息
 	go func() {
@@ -71,7 +67,7 @@ func (this *Server)Handler(conn net.Conn)  {
 		for  {
 			n,err := conn.Read(buf)
 			if n==0 {
-				this.BordCast(user,"off line")
+				user.Offline()
 				return
 			}
 			if err!=nil&& err!=io.EOF{
@@ -79,7 +75,9 @@ func (this *Server)Handler(conn net.Conn)  {
 			}
 			msg:= string(buf[:n-1])
 			//广播消息
-			this.BordCast(user,msg)
+			//针对用户进行消息处理
+			user.DoMessage(msg)
+
 
 		}
 	}()
