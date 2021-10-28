@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"sync"
 )
@@ -61,8 +62,29 @@ func (this *Server)Handler(conn net.Conn)  {
 	this.mapLock.Lock()
 	this.OnlineMap[user.Name]=user
 	this.mapLock.Unlock()
-
+	//广播上线消息
 	this.BordCast(user,"online!!")
+
+	//接收客户端发送的消息
+	go func() {
+		buf:= make([]byte,4096)
+		for  {
+			n,err := conn.Read(buf)
+			if n==0 {
+				this.BordCast(user,"off line")
+				return
+			}
+			if err!=nil&& err!=io.EOF{
+				fmt.Println("conn read err:",err)
+			}
+			msg:= string(buf[:n-1])
+			//广播消息
+			this.BordCast(user,msg)
+
+		}
+	}()
+
+
 	select {
 
 	}
