@@ -81,9 +81,36 @@ func (this *User)DoMessage(msg string)  {
 		}
 
 
+	}else if len(msg)>4 &&msg[:3] == "to|"{
+		//格式 to|张三|消息内容
+		//获取username
+		remoteName := strings.Split(msg,"|")[1]
+		if remoteName==""{
+			this.SendMessage("message correct!use  to|username|message\n")
+			return
+
+		}
+
+		//根据username 获取user对象
+		remoteUser,ok := this.server.OnlineMap[remoteName]
+		if !ok {
+			this.SendMessage(" invide user\n")
+			return
+		}
+		//获取消息内容，根据user对象将消息发送出去
+		content := strings.Split(msg,"|")[2]
+		if content=="" {
+			this.SendMessage(" empty message\n")
+			return
+		}
+		remoteUser.SendMessage(this.Name+" said to u:"+content)
+
+
+
 	}else{
 		this.server.BordCast(this,msg)
 	}
+
 
 
 

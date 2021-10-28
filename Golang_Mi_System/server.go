@@ -99,7 +99,7 @@ func (this *Server)Handler(conn net.Conn)  {
 				//激活select
 				//但是不会执行 判断后的代码
 
-			case <-time.After(time.Second * 20):
+			case <-time.After(time.Second * 60):
 				//case 中有数据，说明已经超时
 				//关闭user 连接
 
