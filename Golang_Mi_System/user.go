@@ -41,6 +41,7 @@ func (this *User)Offline()  {
 	this.server.mapLock.Unlock()
 	//广播上线消息
 	this.server.BordCast(this,"offline!!")
+
 	
 }
 //给当前user发送消息
