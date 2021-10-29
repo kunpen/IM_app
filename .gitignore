@@ -1,3 +1,8 @@
 
 awesomeProject/main.go
 Golang_Mi_System/server.exe
+*.mod
+Client_go/.idea/modules.xml
+Client_go/.idea/Client_go.iml
+Client_go/.idea/
+Client_go/client.exe
