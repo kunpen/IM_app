@@ -6,3 +6,4 @@ Client_go/.idea/modules.xml
 Client_go/.idea/Client_go.iml
 Client_go/.idea/
 Client_go/client.exe
+*.exe
